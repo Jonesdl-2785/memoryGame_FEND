@@ -1,6 +1,8 @@
-//const cards = document.getElementsByClassName('card');
-const cardsArr = Array.from(document.querySelectorAll('.card'));
-const deck = document.querySelector('.deck');
+// const cardsArr = document.getElementsByClassName('card');
+const cardsArr = document.querySelectorAll('.card');
+// console.log(cardsArr);
+// const cardsArr = ["fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-paper-plane-o"];
+const deck = document.querySelector('#deck');
 let cardDeck = [...cardsArr];
 console.log(cardDeck);
 let card_value = [];
@@ -8,7 +10,8 @@ let card_value = [];
 let pickedCards = [];
 let cardsShown = 0;
 cardsShown = [];
-let i = cardsArr.length, j, temp;
+let i = cardsArr.length,
+  j, temp;
 let match = document.getElementsByClassName('match');
 match = 0;
 currentTime = 0;
@@ -27,17 +30,56 @@ let scorePanel = document.getElementsByClassName('score-panel');
 let star = [];
 let stars = document.querySelectorAll('.stars');
 let rating = document.querySelector('.fa-star');
+let gmtime = document.getElementById('gmtime');
+toggleArr = new Array();
 
-// Start Game
-// function beginGame() {
-//   function displayCards() {
-//     deck.innerHTML = "";
-//     shuffle(cardsArr);
-//     for(card of cardsArr) {
-//       deck.appendChild(card);
-//     }
-//   }
-//   displayCards();
+
+/*
+ * set up the event listener for a card. If a card is clicked:
+ *  - display the card's symbol (put this functionality in another function that you call from this one)
+ *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
+ *  - if the list already has another card, check to see if the two cards match
+ *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
+ *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
+ *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
+ *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
+ */
+ // Start Game
+ beginGame();
+
+ function beginGame() {
+   clearInterval(timer);
+
+   timerG();
+   seconds = 0, milsecs = 0, minutes = 0, moves = 0, hours = 0, score = 100;
+
+   for (let i = 0; i < cardsArr.length; i++) {
+     cardsArr[i].addEventListener('click', showCard);
+   }
+
+   let shuffledCards = shuffle(cardsArr);
+   deck; // to remove elements and text
+
+   for (let i = 0; i < shuffledCards.length; i++) {
+     let cardLi = document.createElement('li');
+     // deck.appendChild();
+     cardLi.classList.add('card[i]');
+     cardLi.innerHTML = `<i class="${cardsArr[i]}"></i>`;
+
+     addCardClick(cardsArr);
+   }
+ }
+
+ for (let i = 0; i < cardsArr.length; i++) {
+   cardsArr[i].addEventListener('click', showCard);
+ }
+
+ function showCard() {
+   this.classList.toggle('open');
+   this.classList.toggle('show');
+   this.classList.toggle('disabled');
+ }
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
   var currentIndex = array.length,
@@ -54,131 +96,171 @@ function shuffle(array) {
   return array;
 }
 
+// function clickCard(a,b,c) {
+//   // console.log(c);
+//   // previousCard = b;
+//   if(cardsClicked < 2 && previousCard != b){
+//     toggleArr[cardsClicked] = cardArray[b];
+//     toggleArr[(cardsClicked + 2)] = c. id;
+//     cardsClicked++;
+//     c.src = deck + cardArray[b];
+//       if(cardsClicked  == 2){
+//         if(toggleArr[0] == toggleArr[1]){
+//           messageText('It\'s a MATCH');
+//             choosenewCards();
+//             score++;
+//             // Check if Game is over
+//             if(cardImages <= score) {
+//                 console.log("GAME OVER");
+//                 endGame();
+//             }
+//         } else {
+//             timer = setInterval(resetCard, 3000);
+//             console.log('no match');
+//             msgText('Not a MATCH');
+//         }
+//     }
+//     previousCard = b;
+//   }
+// }
+
 function displayCards() {
   deck.innerHTML = "";
   shuffle(cardDeck);
-  for(card of cardDeck) {
+  for (card of cardDeck) {
     deck.appendChild(card);
   }
 }
+
 displayCards();
-// Start Game
-beginGame();
-function beginGame() {
-  let shuffledCards = shuffle(cardsArr);
-  deck; // to remove elements and text
 
-  for (let i = 0; i < shuffledCards.length; i++) {
-    let cardLi = document.createElement('li');
-    cardLi.classList.add('card');
-    cardLi.innerHTML = `<i class="${cardsArr[i]}"></i>`;
-    // deck.appendChild(card);
-    addCardClick(cardsArr);
+let isCardClicked = true;
+
+function addCardClick(card) {
+  deck.addEventListener('click', (e) => {
+    let pickedCard = e.target;
+    showCard();
+    if (isCardClicked) {
+      timerOn();
+      isCardClicked = false;
     }
+  })
+  let openCard = i;
+  let closedCard = cardsShown[0];
+
+  if (cardsShown === 1) {
+    card.classList.add('open', 'show', 'disable');
+    cardsShown.push(this);
+    // check opened cards
+    isCardMatch(openCard, closedCard);
+
+  } else {
+    openCard.classList.add('open', 'show', 'disable');
+    cardsShown.push(this);
   }
-
-    let isCardClicked = true;
-    function addCardClick(card) {
-      deck.addEventListener('click', (e) => {
-        let pickedCard = e.target;
-          showCard();
-        if(isCardClicked) {
-          timerOn();
-
-          isCardClicked = false;
-        }
-})
-    let openCard = this;
-    let closedCard = cardsShown[0];
-
-    if (cardsShown === 1) {
-      card.classList.add('open', 'show', 'disable');
-      cardsShown.push(this);
-      // check opened cards
-      isCardMatch(openCard, closedCard);
-
-    } else {
-      openCard.classList.add('open', 'show', 'disable');
-      cardsShown.push(this);
-      }
-  };
+};
 
 function isCardMatch(openCard, closedCard) {
   // if match
-  if(openCard.innerHTML === closedCard.innerHTML) {
-        openCard.classList.add("match");
-        closedCard.classList.add("match");
+  if (openCard.innerHTML === closedCard.innerHTML) {
+    openCard.classList.add("match");
+    closedCard.classList.add("match");
 
-        isMatch.push(openCard, closedCard);
+    isMatch.push(openCard, closedCard);
 
-        cardsShown = [];
+    cardsShown = [];
 
-        isGameOver();
+    isGameOver();
 
-      } else {
-        setTimeout(function() {
-          openCard.classList.remove('open', 'show', 'disable');
-          closedCard.classList.remove('open', 'show', 'disable');
-        }, 1000);
-      }
-
-      cardsShown = [];
-
-    }
-
-    newMove();
-
-    function isGameOver() {
-      if(isCardMatch.length === cards.length){
-
-        endTimer();
-      }
+  } else {
+    setTimeout(function() {
+      openCard.classList.remove('open', 'show', 'disable');
+      closedCard.classList.remove('open', 'show', 'disable');
+    }, 1000);
   }
 
-  let movesItems = document.getElementsByClassName('moves');
-    moves = 0;
+  cardsShown = [];
 
-    movesItems.innerHTML = 0;
+}
 
-  function newMove() {
-        moves++;
+newMove();
 
+function isGameOver() {
+  if (isCardMatch.length === cards.length) {
 
-        starRating();
-
+    endTimer();
   }
+}
 
-  let starsInfo = document.getElementsByClassName('stars');
-  star = `<li><i class="fa fa-star"></i></li>`;
-  starsInfo.innerHTML = star + star + star;
-  function starRating(){
-//      starsInfo.innerHTML = star + star + star;
-    if(moves < 4) {
+let movesItems = document.getElementsByClassName('moves');
+moves = 0;
 
-    } else if(moves < 16) {
-      starsInfo.innerHTML = star + star;
-    } else {
-      starsInfo.innerHTML = star;
-    }
+movesItems.innerHTML = 0;
+
+function newMove() {
+  moves++;
+
+
+  starRating();
+
+}
+
+let starsInfo = document.getElementsByClassName('stars');
+star = `<li><i class="fa fa-star"></i></li>`;
+starsInfo.innerHTML = star + star + star;
+
+function starRating() {
+  //      starsInfo.innerHTML = star + star + star;
+  if (moves < 4) {
+
+  } else if (moves < 16) {
+    starsInfo.innerHTML = star + star;
+  } else {
+    starsInfo.innerHTML = star;
   }
+}
 
 let timerInfo = document.getElementsByClassName('timer');
 let startTime,
-    secondsAll = 0;
-    timerInfo.innerHTML = secondsAll;
+  secondsAll = 0;
+timerInfo.innerHTML = secondsAll;
 
-function beginTime(){
-  secondsAll++;
-  timerInfo.innerHTML = secondsAll;
+function addTime() {
+  score--;
+  seconds++;
+  if (seconds >= 60) {
+    seconds = 0;
+    minutes++;
+    if (minutes >= 60) {
+      minutes = 0;
+      hours++;
+    }
+  }
+  // gmtime.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+  timerG();
 }
 
-    // restartTimer(currentTime);
-    // seconds = 0;
-    // timerText = 'seconds';
-    // startTime();
+function timerG() {
+  time = setTimeout(addTime, 1100);
+}
 
+function endGame() {
+  if (score < 0) {
+    score = 0;
+  }
 
-  /*
+  function beginTime() {
+    secondsAll++;
+    timerInfo.innerHTML = secondsAll;
+  }
+
+  // restartTimer(currentTime);
+  // seconds = 0;
+  // timerText = 'seconds';
+  // startTime();
+
+}
+/*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
  *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
