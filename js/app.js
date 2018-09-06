@@ -15,16 +15,14 @@ let i = cardsArr.length,
 let match = document.getElementsByClassName('match');
 match = 0;
 currentTime = 0;
-let timerOn = true;
+// let timerOn = true;
 let timerOff = true;
 let timerId;
-let time = 0;
-let timer = document.getElementsByClassName('timer');
 restartTimer = 0;
 let moves = document.getElementsByClassName('moves');
 moves = 0;
-let minutes = Math.floor(time / 60);
-let seconds = time % 60;
+// let minutes = Math.floor(time / 60);
+// let seconds = time % 60;
 let restart = document.getElementsByClassName('restart');
 let scorePanel = document.getElementsByClassName('score-panel');
 let star = [];
@@ -44,41 +42,32 @@ toggleArr = new Array();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
- // Start Game
- beginGame();
+// Start Game
+beginGame();
 
- function beginGame() {
-   clearInterval(timer);
+function beginGame() {
 
-   timerG();
-   seconds = 0, milsecs = 0, minutes = 0, moves = 0, hours = 0, score = 100;
+  timerG();
+  seconds = 0, milsecs = 0, minutes = 0, moves = 0, hours = 0, score = 100;
 
-   for (let i = 0; i < cardsArr.length; i++) {
-     cardsArr[i].addEventListener('click', showCard);
-   }
+  let shuffledCards = shuffle(cardsArr);
+  deck; // to remove elements and text
 
-   let shuffledCards = shuffle(cardsArr);
-   deck; // to remove elements and text
+  for (let i = 0; i < shuffledCards.length; i++) {
+    let cardLi = document.createElement('li');
+    // deck.appendChild();
+    cardLi.classList.add('card[i]');
+    cardLi.innerHTML = `<i class="${cardsArr[i]}"></i>`;
 
-   for (let i = 0; i < shuffledCards.length; i++) {
-     let cardLi = document.createElement('li');
-     // deck.appendChild();
-     cardLi.classList.add('card[i]');
-     cardLi.innerHTML = `<i class="${cardsArr[i]}"></i>`;
+  }
+}
 
-     addCardClick(cardsArr);
-   }
- }
 
- for (let i = 0; i < cardsArr.length; i++) {
-   cardsArr[i].addEventListener('click', showCard);
- }
-
- function showCard() {
-   this.classList.toggle('open');
-   this.classList.toggle('show');
-   this.classList.toggle('disabled');
- }
+function showCard(card) {
+  card.classList.toggle('open');
+  card.classList.toggle('show');
+  card.classList.toggle('disabled');
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -96,33 +85,7 @@ function shuffle(array) {
   return array;
 }
 
-// function clickCard(a,b,c) {
-//   // console.log(c);
-//   // previousCard = b;
-//   if(cardsClicked < 2 && previousCard != b){
-//     toggleArr[cardsClicked] = cardArray[b];
-//     toggleArr[(cardsClicked + 2)] = c. id;
-//     cardsClicked++;
-//     c.src = deck + cardArray[b];
-//       if(cardsClicked  == 2){
-//         if(toggleArr[0] == toggleArr[1]){
-//           messageText('It\'s a MATCH');
-//             choosenewCards();
-//             score++;
-//             // Check if Game is over
-//             if(cardImages <= score) {
-//                 console.log("GAME OVER");
-//                 endGame();
-//             }
-//         } else {
-//             timer = setInterval(resetCard, 3000);
-//             console.log('no match');
-//             msgText('Not a MATCH');
-//         }
-//     }
-//     previousCard = b;
-//   }
-// }
+
 
 function displayCards() {
   deck.innerHTML = "";
@@ -134,31 +97,61 @@ function displayCards() {
 
 displayCards();
 
+
 let isCardClicked = true;
 
-function addCardClick(card) {
-  deck.addEventListener('click', (e) => {
-    let pickedCard = e.target;
-    showCard();
+// Session code
+
+/**
+ * Click event listener logic : Rodrick
+ */
+const cards = document.querySelectorAll('.card');
+
+cards.forEach(card => {
+  card.addEventListener('click', e => {
+    const cardPicked = e.target;
+
     if (isCardClicked) {
       timerOn();
       isCardClicked = false;
     }
+
+    // If one card selected and current picked card === that one card: Do nothing
+    if (cardsShown.length === 1 && cardsShown[0] === cardPicked) {
+      return;
+      console.log('here')
+    }
+    // Otherwise, flip card
+    else {
+      showCard(cardPicked);
+      cardsShown.push(cardPicked);
+
+      // if two cards are selected : See if they match
+      if (cardsShown.length === 2) {
+        isCardMatch(cardsShown[0], cardsShown[1]);
+      }
+    }
   })
-  let openCard = i;
-  let closedCard = cardsShown[0];
+});
 
-  if (cardsShown === 1) {
-    card.classList.add('open', 'show', 'disable');
-    cardsShown.push(this);
-    // check opened cards
-    isCardMatch(openCard, closedCard);
 
-  } else {
-    openCard.classList.add('open', 'show', 'disable');
-    cardsShown.push(this);
-  }
-};
+//Timer
+let newTimer;
+let time = 0;
+const timer = document.querySelector('#timer');
+
+function timerOn() {
+  newTimer = setInterval(() => {
+    time++;
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    timer.innerHTML = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds: seconds}`
+  }, 1000);
+}
+
+// End session
+
+let isMatch = [];
 
 function isCardMatch(openCard, closedCard) {
   // if match
@@ -173,7 +166,7 @@ function isCardMatch(openCard, closedCard) {
     isGameOver();
 
   } else {
-    setTimeout(function() {
+    setTimeout(function () {
       openCard.classList.remove('open', 'show', 'disable');
       closedCard.classList.remove('open', 'show', 'disable');
     }, 1000);
@@ -186,7 +179,7 @@ function isCardMatch(openCard, closedCard) {
 newMove();
 
 function isGameOver() {
-  if (isCardMatch.length === cards.length) {
+  if (isCardMatch.length === 16) {
 
     endTimer();
   }
@@ -237,11 +230,11 @@ function addTime() {
     }
   }
   // gmtime.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
-  timerG();
+  // timerG();
 }
 
 function timerG() {
-  time = setTimeout(addTime, 1100);
+  // time = setTimeout(addTime, 1100);
 }
 
 function endGame() {
