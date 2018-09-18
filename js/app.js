@@ -34,6 +34,7 @@ toggleArr = new Array();
 
 // Start Game
 beginGame();
+
 function beginGame() {
   let shuffledCards = shuffle(cardsArr);
   deck; // to remove elements and text
@@ -73,25 +74,25 @@ function newMove() {
   let movesItems = document.getElementsByClassName('moves');
   // moves = 0;
   movesItems.innerHTML = moves;
-    if (moves > 5 && moves < 10){
-      for (i = 0; i < 3; i++) {
-        if (i > 1) {
-          stars[i].style.visibility = 'collapse';
-        }
+  if (moves > 5 && moves < 10) {
+    for (i = 0; i < 3; i++) {
+      if (i > 1) {
+        stars[i].style.visibility = 'collapse';
       }
     }
-    else if (moves > 11) {
-      for(i = 0; i < 3; i++) {
-        if (i > 0) {
-          stars[i].style.visibility = 'collapse';
-        }
+  } else if (moves > 11) {
+    for (i = 0; i < 3; i++) {
+      if (i > 0) {
+        stars[i].style.visibility = 'collapse';
       }
     }
+  }
 }
 checkScore();
+
 function checkScore() {
-  if (moves === 16 || moves === 32) {
-      hideStar();
+  if (moves === 6 || moves === 32) {
+    hideStar();
   }
 }
 
@@ -109,12 +110,14 @@ hideStar();
 hideStar();
 
 //Timer
+// let timerOff = true;
 let newTimer;
+// let timerId;
 let time = 0;
 const timer = document.querySelector('#timer');
 
 function timerOn() {
-  newTimer = setInterval(() => {
+  timerId = setInterval(() => {
     time++;
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -148,7 +151,7 @@ cards.forEach(card => {
   card.addEventListener('click', e => {
     const cardPicked = e.target;
     if (isCardClicked) {
-      if(timerOff) {
+      if (timerOff) {
         timerOn();
         isCardClicked = false;
       }
@@ -190,14 +193,14 @@ function isCardMatch(openCard, closedCard) {
     cardsShown = [];
     matched++;
 
-      if(matched === TOTAL_PAIRS) {
-        gameEnd();
-        console.log('Game Over!');
-      }
-    // isGameOver();
+    if (matched === TOTAL_PAIRS) {
+      gameEnd();
+      console.log('Game Over!');
+    }
+
 
   } else {
-    setTimeout(function () {
+    setTimeout(function() {
       openCard.classList.remove('open', 'show', 'disable');
       closedCard.classList.remove('open', 'show', 'disable');
     }, 1000);
@@ -210,12 +213,19 @@ move = 0
 
 
 newMove();
+isGameOver();
 
 function isGameOver() {
   if (isCardMatch.length === 16) {
 
-    endTimer();
   }
+}
+gameOver();
+
+function gameOver() {
+  stopTimer();
+  getModalStats();
+  toggleModal();
 }
 
 let starsInfo = document.getElementsByClassName('stars');
@@ -223,7 +233,7 @@ star = `<li><i class="fa fa-star"></i></li>`;
 starsInfo.innerHTML = star + star + star;
 
 function starRating() {
-// starsInfo.innerHTML = star + star + star;
+  // starsInfo.innerHTML = star + star + star;
   if (moves < 4) {
 
   } else if (moves < 32) {
@@ -256,7 +266,7 @@ function endGame() {
     score = 0;
   }
 
-function beginTime() {
+  function beginTime() {
     secondsAll++;
     timerInfo.innerHTML = secondsAll;
   }
@@ -278,7 +288,7 @@ function resetGame() {
   showTime();
 }
 
-function resetTimeAndTimer(){
+function resetTimeAndTimer() {
   stopTime();
   timerOff = true;
   time = 0;
