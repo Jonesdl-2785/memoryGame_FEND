@@ -1,4 +1,4 @@
-/ const cardsArr = document.getElementsByClassName('card');
+const cardsArr = document.getElementsByClassName('card');
 const cardsArr = document.querySelectorAll('.card');
 // console.log(cardsArr);
 // const cardsArr = ["fa-bolt", "fa-cube", "fa-anchor", "fa-leaf", "fa-bicycle", "fa-diamond", "fa-bomb", "fa-paper-plane-o"];
