@@ -1,3 +1,4 @@
+
 html {
     box-sizing: border-box;
 }
@@ -37,7 +38,7 @@ h1 {
  * Styles for the deck of cards
  */
 
-.deck {
+#deck {
     width: 660px;
     min-height: 680px;
     background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
@@ -51,7 +52,7 @@ h1 {
     margin: 0 0 3em;
 }
 
-.deck .card {
+#deck .card {
     height: 125px;
     width: 125px;
     background: #2e3d49;
@@ -65,17 +66,17 @@ h1 {
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
-.deck .card.open {
+#deck .card.open {
     transform: rotateY(0);
     background: #02b3e4;
     cursor: default;
 }
 
-.deck .card.show {
+#deck .card.show {
     font-size: 33px;
 }
 
-.deck .card.match {
+#deck .card.match {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
@@ -105,5 +106,122 @@ h1 {
 
 .score-panel .restart {
     float: right;
+    cursor: pointer;
+}
+/* w3 schools */
+/* The Modal (background) */
+/* .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+} */
+
+.modal_bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.438);
+}
+
+.hide {
+  display: none;
+}
+
+.modal_title{
+
+}
+
+.modal_head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid gray;
+}
+
+.modal_body {
+    position: relative;
+    width: 400px;
+    /* height: 400px; */
+    top: 50%;
+    left: 50%;
+    background: #cccfcf;
+    transform: translate(-50%, -70%);
+}
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.modal_stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.modal_title {
+  font-weight: 800;
+}
+.modal_time{}
+
+.modal_stars{}
+
+.modal_moves{}
+
+.modal_close {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.modal_btns {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+}
+
+.modal_btn {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  font-size: 14px;
+  border: 2px solid inherit;
+  border-radius: 25px;
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e2e2e2+0,dbdbdb+50,d1d1d1+51,fefefe+100 */
+  background: rgb(226,226,226); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
+}
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
 }
